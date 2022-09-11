@@ -10,9 +10,9 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
 
-        try {
-            FileReader fr = new FileReader("addresses");
-            BufferedReader br = new BufferedReader(fr);
+        try (FileReader fr = new FileReader("addresses");
+             BufferedReader br = new BufferedReader(fr)) {
+
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -21,9 +21,9 @@ public class Main {
             }
 
         } catch (FileNotFoundException fnfe) {
-            log.error("Could not find the file");
+            log.error("Could not find the address file.");
         } catch (IOException e) {
-            log.error("Could not read line");
+            log.error("Could not read line from the address file.");
         }
     }
 }
