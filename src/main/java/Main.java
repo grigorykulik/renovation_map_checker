@@ -1,5 +1,7 @@
 import addressChecker.AddressChecker;
+import dao.AddressDaoImpl;
 import lombok.extern.slf4j.Slf4j;
+import service.AddressService;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -9,22 +11,8 @@ import java.io.IOException;
 @Slf4j
 public class Main {
     public static void main(String[] args) {
-
-        try (FileReader fr = new FileReader("addresses");
-             BufferedReader br = new BufferedReader(fr)) {
-
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                AddressChecker.checkAddress(line);
-                log.info(line);
-            }
-
-        } catch (FileNotFoundException fnfe) {
-            log.error("Could not find the address file.");
-        } catch (IOException e) {
-            log.error("Could not read line from the address file.");
-        }
+        AddressService service = new AddressService(new AddressDaoImpl());
+        service.checkAddresses();
     }
 }
 
