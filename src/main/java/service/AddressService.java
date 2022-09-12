@@ -34,8 +34,7 @@ public class AddressService {
                         } else {
                             message.append(String.format("%s: в программе. Программа реновации распространяется на следующие адреса.", address) + "%0A");
                             mp.getResults()
-                                    .stream()
-                                    .forEach(e -> message.append(e.getText() + "%0A"));
+                                    .forEach(e -> message.append(e.getText()).append("%0A"));
                         }
 
                         try {
