@@ -21,40 +21,33 @@ public class AddressService {
                 address -> {
                     log.info("Opening map page");
 
-                    MapPage mp = MapPage.openPage();
-                    mp.typeInAddress(address);
-                    mp.clickSearch();
+                    try (MapPage mp = MapPage.openPage()) {
 
-                    StringBuilder message = new StringBuilder();
+                        mp.typeInAddress(address);
+                        mp.clickSearch();
 
-                    log.info(String.format("Checking %s", address));
-                    if (mp.getResults().size() == 0) {
-                        message.append(String.format("%s: в программе нет", address));
-                    } else {
-                        message.append(String.format("%s: в программе. Программа реновации распространяется на следующие адреса.", address) + "%0A");
-                        mp.getResults()
-                                .stream()
-                                .forEach(e -> message.append(e.getText() + "%0A"));
-                    }
+                        StringBuilder message = new StringBuilder();
 
-                    try {
-                        TelegramPoster.sendToTelegram(message.toString());
-                        log.info(String.format("Sending message for %s", address));
-                        log.info(message.toString());
-                    } catch (IOException e) {
-                        log.error(String.format("Could not send message to telegram for address %s", address));
-                    } finally {
-                        mp.closePage();
-                    }
+                        log.info(String.format("Checking %s", address));
+                        if (mp.getResults().isEmpty()) {
+                            message.append(String.format("%s: в программе нет", address));
+                        } else {
+                            message.append(String.format("%s: в программе. Программа реновации распространяется на следующие адреса.", address) + "%0A");
+                            mp.getResults()
+                                    .stream()
+                                    .forEach(e -> message.append(e.getText() + "%0A"));
+                        }
 
-                    try {
-                        Thread.sleep(SLEEP_TIMEOUT);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        try {
+                            TelegramPoster.sendToTelegram(message.toString());
+                            log.info(String.format("Sending message for %s", address));
+                            log.info(message.toString());
+                        } catch (IOException e) {
+                            log.error(String.format("Could not send message to telegram for address %s", address));
+                        }
                     }
                 }
         );
 
     }
-
 }

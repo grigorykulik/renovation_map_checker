@@ -10,7 +10,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import java.util.List;
 
 @Slf4j
-public class MapPage {
+public class MapPage implements AutoCloseable {
     private static final String MAP_URL_ADDRESS = "https://rzt.spb.ru/districts/";
     private final By searchField = new By.ByXPath("/html/body/footer/div/div[1]/form/div/input");
     private final By searchButton = new By.ByXPath("/html/body/footer/div/div[1]/form/button");
@@ -46,7 +46,8 @@ public class MapPage {
         return results;
     }
 
-    public void closePage() {
+    @Override
+    public void close() {
         driver.quit();
     }
 }
