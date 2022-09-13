@@ -2,6 +2,8 @@ package pages;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,13 +13,13 @@ import java.util.List;
 
 @Slf4j
 public class MapPage implements AutoCloseable {
-    private static final String MAP_URL_ADDRESS = "https://rzt.spb.ru/districts/";
-    private final By searchField = new By.ByXPath("/html/body/footer/div/div[1]/form/div/input");
-    private final By searchButton = new By.ByXPath("/html/body/footer/div/div[1]/form/button");
+    private static final PropertiesConfiguration config = new PropertiesConfiguration();
+    private static final By searchField = new By.ByXPath("/html/body/footer/div/div[1]/form/div/input");
+    private static final By searchButton = new By.ByXPath("/html/body/footer/div/div[1]/form/button");
+    private static final String propertiesFileName = "src/main/resources/application.properties";
+    private WebDriver driver;
 
-    private static WebDriver driver;
-
-    public static MapPage openPage () {
+    public MapPage () {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("start-maximized"); // open Browser in maximized mode
@@ -28,13 +30,18 @@ public class MapPage implements AutoCloseable {
         options.addArguments("--no-sandbox"); // Bypass OS security model
         options.addArguments("--headless");
 
+        try {
+            config.load(propertiesFileName);
+        } catch (ConfigurationException e) {
+            log.error("Could not load properties file.");
+        }
+
         driver = new ChromeDriver(options);
-        driver.get(MAP_URL_ADDRESS);
-        return new MapPage();
+        driver.get(config.getString("MAP_URL_ADDRESS"));
     }
 
     public void typeInAddress(String address) {
-        driver.findElement(this.searchField).sendKeys(address);
+        driver.findElement(searchField).sendKeys(address);
     }
 
     public void clickSearch() {
@@ -42,8 +49,7 @@ public class MapPage implements AutoCloseable {
     }
 
     public List<WebElement> getResults() {
-        List<WebElement> results = driver.findElements(new By.ByClassName("search-page-item"));
-        return results;
+        return driver.findElements(new By.ByClassName("search-page-item"));
     }
 
     @Override
