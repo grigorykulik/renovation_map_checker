@@ -20,7 +20,7 @@ public class TelegramPoster {
 
     public TelegramPoster() {
         try {
-            config.load("src/main/resources/application.properties");
+            config.load("application.properties");
             urlString = config.getString("BOT_ENDPOINT_URL");
             apiToken = config.getString("BOT_API_TOKEN");
             chatId = config.getString("CHAT_ID");

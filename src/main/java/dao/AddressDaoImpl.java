@@ -16,7 +16,7 @@ public class AddressDaoImpl implements AddressDao {
     public List<String> getAddresses() {
         List<String> addresses = new ArrayList<>();
 
-        try (FileReader fr = new FileReader("addresses");
+        try (FileReader fr = new FileReader("/opt/address_checker/addresses");
              BufferedReader br = new BufferedReader(fr)) {
 
             String line;

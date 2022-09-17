@@ -16,7 +16,7 @@ public class MapPage implements AutoCloseable {
     private static final PropertiesConfiguration config = new PropertiesConfiguration();
     private static final By searchField = new By.ByXPath("/html/body/footer/div/div[1]/form/div/input");
     private static final By searchButton = new By.ByXPath("/html/body/footer/div/div[1]/form/button");
-    private static final String propertiesFileName = "src/main/resources/application.properties";
+    private static final String propertiesFileName = "application.properties";
     private WebDriver driver;
 
     public MapPage () {
